@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+    php:
+        container_name: sm_php
+        build:
+            context: ./docker/php
+            dockerfile: Dockerfile
+            args:
+                - DEBUG_PORT=9181
+        environment:
+            - PHP_IDE_CONFIG=serverName=spoonmeter
+            - XDEBUG_CONFIG=idekey=PHPSTORM
+        restart: 'no'
+        tty: true
+        depends_on:
+            - db
+        working_dir: /app
+        volumes:
+            - ./src:/app
+    nginx:
+        container_name: sm_nginx
+        build:
+            context: ./docker/nginx
+            dockerfile: Dockerfile
+        restart: 'no'
+        tty: true
+        volumes:
+            - ./docker/nginx/conf/conf.d:/etc/nginx/conf.d
+            - ./src:/app
+        ports:
+            - "9080:80"
+            - "9043:443"
+    db:
+        container_name: sm_mysql
+        build:
+            context: ./docker/db
+            dockerfile: Dockerfile
+#        command: --default-authentication-plugin=mysql_native_password
+        restart: 'no'
+#        command: --init-file /home/init.sql
+        volumes:
+            - ./db/init.sql:/home/init.sql
+            - ./db/data:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: spoonmeter
+            MYSQL_USER: spoonmeter
+            MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: secret
+        ports:
+            - "33061:3306"
+    adminer:
+        image: adminer
+        restart: 'no'
+        ports:
+            - 9180:8080

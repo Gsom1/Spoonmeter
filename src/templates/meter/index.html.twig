@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Spoonmeter - {% trans %} converter {% endtrans %}{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-xs-12 col-lg-4">
+            <form id="converter_form">
+                <div class="form-group">
+                    <label for="unit_from">{% trans %} convert_from {% endtrans %}</label>
+                    {% include 'common/elements/unit_selector.twig' with {'name': 'unit_from', 'items': units} %}
+                </div>
+                <div class="form-group">
+                    <label for="unit_to">{% trans %} convert_to {% endtrans %}</label>
+                    {% include 'common/elements/unit_selector.twig' with {'name': 'unit_to', 'items': units, 'selected_item': unit_from} %}
+                </div>
+                <div class="form-group">
+                    <label for="substance">{% trans %} substance {% endtrans %}</label>
+                    {% include 'common/elements/substance_selector.twig' with {'name': 'substance', 'items': substances} %}
+                </div>
+                <div class="form-group">
+                    <label for="amount">{% trans %} amount {% endtrans %}</label>
+                    <input type="text" class="form-control" id="amount"
+                           placeholder="{% trans %} amount_placeholder {% endtrans %}">
+                </div>
+                <button type="submit" id="submit" class="btn btn-primary">{% trans %} calculate {% endtrans %}</button>
+            </form>
+        </div>
+
+        <div class="col-xs-12 col-lg-4">
+            <div class="jumbotron h-100 d-flex justify-content-center mt-3">
+                <div class="row justify-content-center">
+                    <div class="col align-self-center text-center">
+                        <h1 class="display-4" id="result">0.00</h1>
+                        <p class="lead">{% trans %} your_result {% endtrans %}</p>
+                        {% include 'common/elements/share_buttons.twig' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
